@@ -1,16 +1,16 @@
 {
     "builds": [{
-      "src": "user_manager/user_manager/user_manager/wsgi.py",
+      "src": "user_manager/user_manager/wsgi.py",
       "use": "@vercel/python",
       "config": {
         "maxLambdaSize": "15mb",
-        "runtime": "python3.11.9"
+        "runtime": "python3.12.6"
       }
     }],
     "routes": [
       {
         "src": "/(.*)",
-        "dest": "user_manager/user_manager/user_manager/wsgi.py"
+        "dest": "user_manager/user_manager/wsgi.py"
       }
     ]
 }
