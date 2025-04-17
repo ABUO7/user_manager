@@ -1,4 +1,4 @@
-from user_manager.api.response._enum_ import ResponseEnum
+from api.response._enum_ import ResponseEnum
 
 
 class Errors400(ResponseEnum):
