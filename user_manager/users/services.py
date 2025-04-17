@@ -4,7 +4,7 @@ from ninja.errors import HttpError
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .models import CustomUser
 from .schemas import RegisterSchema, LoginSchema, UpdateUserSchema
-from ..api.response.error.text import Errors400, Errors500, Errors401
+from api.response.error.text import Errors400, Errors500, Errors401
 
 
 def register_user(data: RegisterSchema):

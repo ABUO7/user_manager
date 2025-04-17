@@ -1,7 +1,7 @@
 from django.core.mail import send_mail
 from ninja.errors import HttpError
-from ..api.response.error.text import Errors500
-from ..api.response.success import Success200
+from api.response.error.text import Errors500
+from api.response.success import Success200
 
 
 def send_verification_email(email: str, code: str):

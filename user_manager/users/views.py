@@ -2,7 +2,7 @@ from ninja import Router
 from .schemas import RegisterSchema, LoginSchema, UpdateUserSchema, TokenOut, RefreshIn, RefreshOut
 from .services import register_user, login_user, update_user_profile, refresh_access_token
 from .dependencies import JWTAuth
-from ..api.response.success import Success200
+from api.response.success import Success200
 
 router = Router()
 
