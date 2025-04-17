@@ -7,7 +7,7 @@ class UserManager(BaseUserManager):
             raise ValueError("Email обязателен")
         email = self.normalize_email(email)
         user = self.model(email=email, **extra_fields)
-        user.set_password(password)  # Хешируем пароль
+        user.set_password(password)
         user.save()
         return user
 
@@ -40,8 +40,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name', 'phone', 'user_type']
 
-    # is_email_verified = models.BooleanField(default=False)
-    # verification_code = models.CharField(max_length=6, blank=True, null=True)
 
     def __str__(self):
         return self.email

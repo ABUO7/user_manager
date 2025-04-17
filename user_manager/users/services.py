@@ -1,19 +1,14 @@
-import random
-from django.db import IntegrityError
 from django.contrib.auth import authenticate
+from django.db import IntegrityError
 from ninja.errors import HttpError
 from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from .models import CustomUser
 from .schemas import RegisterSchema, LoginSchema, UpdateUserSchema
-from .utils import send_verification_email
+from ..api.response.error.text import Errors400, Errors500, Errors401
 
-
-# def generate_verification_code():
-#     return str(random.randint(100000, 999999))
 
 def register_user(data: RegisterSchema):
     try:
-        # code = generate_verification_code()
         user = CustomUser.objects.create_user(
             first_name=data.first_name,
             last_name=data.last_name,
@@ -21,28 +16,25 @@ def register_user(data: RegisterSchema):
             password=data.password,
             phone=data.phone,
             user_type=data.user_type,
-            # is_active=True,
-            # verification_code=code
         )
-        # send_verification_email(user.email, code)
         return user
     except IntegrityError as e:
         if "unique constraint" in str(e).lower():
-            raise HttpError(400, "Пользователь с таким email уже существует")
-        raise HttpError(500, "Ошибка при регистрации")
+            raise HttpError(400, Errors400.USER_EMAIL_ALREADY_EXISTS.to_dict())
+        raise HttpError(500, Errors500.INTERNAL_SERVER_ERROR.to_dict())
+
 
 def login_user(data: LoginSchema):
     user = authenticate(email=data.email, password=data.password)
     if not user:
-        raise HttpError(401, "Неверный email или пароль")
-    # if not user.is_email_verified:
-    #     raise HttpError(403, "Email не подтвержден")
+        raise HttpError(401, Errors401.INVALID_CREDENTIALS.to_dict())
     refresh = RefreshToken.for_user(user)
     return {
         "access": str(refresh.access_token),
         "refresh": str(refresh),
         "token_type": "Bearer"
     }
+
 
 def update_user_profile(user, data: UpdateUserSchema):
     user.first_name = data.first_name
@@ -52,13 +44,6 @@ def update_user_profile(user, data: UpdateUserSchema):
     user.save()
     return user
 
-# def logout_user(refresh_token: str):
-#     try:
-#         token = RefreshToken(refresh_token)
-#         token.blacklist()
-#         return {"detail": "Вы успешно вышли"}
-#     except TokenError:
-#         raise HttpError(400, "Невалидный refresh токен")
 
 def refresh_access_token(refresh_token: str):
     try:
@@ -68,4 +53,4 @@ def refresh_access_token(refresh_token: str):
             "token_type": "Bearer"
         }
     except TokenError:
-        raise HttpError(400, "Refresh токен невалиден или истёк")
+        raise HttpError(400, Errors400.REFRESH_TOKEN_INVALID.to_dict())
