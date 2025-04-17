@@ -4,7 +4,7 @@ from ninja.errors import HttpError
 from ninja.security import HttpBearer
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from user_manager.api.response.error.text import Errors401
+from ..api.response.error.text import Errors401
 
 User = get_user_model()
 
